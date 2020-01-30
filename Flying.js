@@ -19,6 +19,8 @@ var dust = [];
 var clockCount = 0;
 var delay = 2;
 var delay2 = 5;
+var obst;
+var obst2;
 
 var character = new WebImage("http://www.tidydesign.com/downloads/tidy-twitter-bird.png");
 character.setSize(60,60);
@@ -28,20 +30,20 @@ character.setRotation(-10);
 var background = new WebImage("https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto/gigs/133075956/original/b988b79e8d44cf4cba690f269cc6faf2c2f8e71f/make-2d-game-background-realistic-or-cartoon-style.jpg");
 background.setSize(getWidth(),getHeight());
 
-var obst = new Rectangle(30, 90);
+obst = new Rectangle(30, 90);
 obst.setPosition(300, Randomizer.nextInt(getHeight() - getHeight(), getHeight() + 90));
 obst.setColor(Randomizer.nextColor());
-var obst2 = new Rectangle(30, 90);
+obst2 = new Rectangle(30, 90);
 obst2.setPosition(300, Randomizer.nextInt(getHeight() - getHeight(), getHeight() + 90));
 obst2.setColor(Randomizer.nextColor());
 
 function start(){
-    makeRect(getWidth(),getHeight(),getWidth()-getWidth(),
-    getHeight()-getHeight(),Color.black);
-    
+    //makeRect(getWidth(),getHeight(),getWidth()-getWidth(),
+   // getHeight()-getHeight(),Color.black);
     add(background);
     add(character);
     setTimer(moveCharacter, 5);
+    setTimer(dustCommand, 5);
     add(obst);
     add(obst2);
     setTimer(moveObst,4);
@@ -50,57 +52,8 @@ function start(){
     //setTimer(animateTerrain,25);
     setTimer(makeText,1);
 }
-function makeRect(width, height, x, y, color){
-    var rect = new Rectangle(width, height);
-    rect.setPosition(x, y);
-    rect.setColor(color);
-    add(rect);
-}
-function terrain1(){
-    for(var i = 0; i <= 100; i++){
-        var rect = new Rectangle(10, Randomizer.nextInt(getHeight()-getHeight(),
-        getHeight()-getHeight()+50));
-        rect.setPosition(0+numBlocks, getHeight()-getHeight());
-        rect.setColor(Color.green);
-        add(rect);
-        numBlocks = numBlocks + 5;
-        moveTerrain.push(rect);
-    }
-}
-function terrain2(){
-    for(var i = 0; i <= 100; i++){
-        var rect = new Rectangle(10, Randomizer.nextInt(getHeight()-getHeight(),
-        getHeight()-getHeight()+50));
-        rect.setPosition(getWidth()-numBlocksTwo, getHeight()-rect.getHeight());
-        rect.setColor(Color.green);
-        add(rect);
-        numBlocksTwo = numBlocksTwo + 5;
-        moveTerrain2.push(rect);
-    }
-}
-// function animateTerrain(){
-//     for(var i = 0; i <= 100; i++){
-//         moveTerrain[i].move(-3,0)
-//         moveTerrain2[i].move(-3,0)
-//         if(moveTerrain[i].getX() < 0){
-//             moveTerrain[i].setPosition(getWidth(),0)
-//         }
-//         if(moveTerrain2[i].getX() < 0){
-//             moveTerrain2[i].setPosition(getWidth(),getHeight()-moveTerrain2[i].getHeight())
-            
-//         }
-//         if(lost == true){
-//         stopTimer(animateTerrain);
-//         }
-//     }
-//     if (clockCount % delay == 0) {
-//         moveDust();
-//         makeDust();
-//     }
-//     clockCount++;
-// }
 function moveCharacter() {
-character.move(dx,dy);
+    character.move(dx,dy);
     if(smooth == true){
        dy = dy-1/6;
        if(dy <= MAX_DY){
@@ -123,6 +76,7 @@ character.move(dx,dy);
     }
     if(lost == true){
         stopTimer(moveCharacter);
+        stopTimer(dustCommand);
     }
     if(lost == true){
        var txt = new Text("You Lost!", "30pt Arial");
@@ -148,6 +102,7 @@ character.move(dx,dy);
     if(character.getY - 30 == (obst2.getY)){
        lost = true;
     }
+
 // top front corner
     var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY());
     if (wall != null && wall.getColor() != Color.black) lost = true;
@@ -173,39 +128,47 @@ function swap2(e){
 function moveObst(){
     obst.move(ax,ay);
     obst2.move(ax2,ay2);
-    if(obst.getX() + 30 < 0){
+    if(obst.getX() + 30 == 0){
         obst.setPosition(getWidth(), Randomizer.nextInt
         (0, getHeight() - 90));
     }
-    if(obst2.getX() + 30 < 0){
+    if(obst2.getX() + 30 == 0){
         obst.setPosition(getWidth(), Randomizer.nextInt
         (0, getHeight() - 90));
     }
     if(lost == true){
         stopTimer(moveObst);
     }
+    //obst2.setColor(Randomizer.nextColor());
+}
+function dustCommand(){
+    if (clockCount % delay == 0) {
+        moveDust();
+        makeDust();
+    }
+    clockCount++;
 }
 function makeDust(){
     var circle = new Circle(3);
-    circle.setPosition(character.getX()-2, character.getY()+(character.getHeight()/2));
-    circle.setColor(Color.gray);
+    circle.setPosition(character.getX(), character.getY()+30);
+    circle.setColor(Color.white);
     dust.push(circle);
     add(circle)
 }
 function moveDust(){
     var size = 4;
     for(var d of dust){ 
-        d.move(-6,0);
-        if (d.getX() < character.getX()-20){
+        d.move(-20,0);
+        if (d.getX() == character.getX()-30){
             d.radius = 3;
         }
-        if (d.getX() < character.getX()-40){
+        if (d.getX() == character.getX()-60){
             d.radius = 2;
         }
-        if (d.getX() < character.getX()-60){
+        if (d.getX() == character.getX()-90){
             d.radius = 1;
         }
-        if (d.getX() <= 0){
+        if (d.getX() == 0){
             remove(d);
         }
     }
@@ -221,3 +184,52 @@ function makeText(){
         stopTimer(makeText);
     }
 }
+// function makeRect(width, height, x, y, color){
+//     var rect = new Rectangle(width, height);
+//     rect.setPosition(x, y);
+//     rect.setColor(color);
+//     add(rect);
+// }
+// function terrain1(){
+//     for(var i = 0; i <= 100; i++){
+//         var rect = new Rectangle(10, Randomizer.nextInt(getHeight()-getHeight(),
+//         getHeight()-getHeight()+50));
+//         rect.setPosition(0+numBlocks, getHeight()-getHeight());
+//         rect.setColor(Color.green);
+//         add(rect);
+//         numBlocks = numBlocks + 5;
+//         moveTerrain.push(rect);
+//     }
+// }
+// function terrain2(){
+//     for(var i = 0; i <= 100; i++){
+//         var rect = new Rectangle(10, Randomizer.nextInt(getHeight()-getHeight(),
+//         getHeight()-getHeight()+50));
+//         rect.setPosition(getWidth()-numBlocksTwo, getHeight()-rect.getHeight());
+//         rect.setColor(Color.green);
+//         add(rect);
+//         numBlocksTwo = numBlocksTwo + 5;
+//         moveTerrain2.push(rect);
+//     }
+// }
+// function animateTerrain(){
+//     for(var i = 0; i <= 100; i++){
+//         moveTerrain[i].move(-3,0)
+//         moveTerrain2[i].move(-3,0)
+//         if(moveTerrain[i].getX() < 0){
+//             moveTerrain[i].setPosition(getWidth(),0)
+//         }
+//         if(moveTerrain2[i].getX() < 0){
+//             moveTerrain2[i].setPosition(getWidth(),getHeight()-moveTerrain2[i].getHeight())
+            
+//         }
+//         if(lost == true){
+//         stopTimer(animateTerrain);
+//         }
+//     }
+//     if (clockCount % delay == 0) {
+//         moveDust();
+//         makeDust();
+//     }
+//     clockCount++;
+// }
