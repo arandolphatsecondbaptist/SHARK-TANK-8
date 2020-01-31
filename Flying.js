@@ -6,8 +6,8 @@ var checkOn = false;
 var MAX_DY = -4;
 var dx = 0;
 var dy = 2;
-var ax = -2;
-var ax2 = -2;
+var ax = -8;
+var ax2 = -8;
 var ay2 = 0;
 var ay = 0;
 var smooth = false;
@@ -31,10 +31,10 @@ var background = new WebImage("https://fiverr-res.cloudinary.com/images/t_main1,
 background.setSize(getWidth(),getHeight());
 
 obst = new Rectangle(30, 90);
-obst.setPosition(300, Randomizer.nextInt(getHeight() - getHeight(), getHeight() + 90));
+obst.setPosition(300, Randomizer.nextInt(0, getHeight() + 90));
 obst.setColor(Randomizer.nextColor());
 obst2 = new Rectangle(30, 90);
-obst2.setPosition(300, Randomizer.nextInt(getHeight() - getHeight(), getHeight() + 90));
+obst2.setPosition(300, Randomizer.nextInt(0, getHeight() + 90));
 obst2.setColor(Randomizer.nextColor());
 
 function start(){
@@ -42,104 +42,115 @@ function start(){
    // getHeight()-getHeight(),Color.black);
     add(background);
     add(character);
-    setTimer(moveCharacter, 5);
+    //setTimer(moveCharacter, 5);
     setTimer(dustCommand, 5);
+    mouseDragMethod(moveCharacter);
     add(obst);
     add(obst2);
-    setTimer(moveObst,4);
+    setTimer(moveObst,16);
     // terrain1();
     // terrain2();
     //setTimer(animateTerrain,25);
     setTimer(makeText,1);
 }
-function moveCharacter() {
-    character.move(dx,dy);
-    if(smooth == true){
-       dy = dy-1/6;
-       if(dy <= MAX_DY){
-           dy = MAX_DY;
-       }
-    }
-    if(smooth == false){
-       dy = dy+1/5;
-       if(dy >= 4){
-           dy = 4;
-       }
-    }
-    mouseDownMethod(swap);
-    mouseUpMethod(swap2);
-    if(character.getY() <= getHeight()-getHeight()){
-       lost = true;
-    }
-    if(character.getY()+30 >= getHeight()){
-       lost = true;
-    }
-    if(lost == true){
-        stopTimer(moveCharacter);
-        stopTimer(dustCommand);
-    }
-    if(lost == true){
-       var txt = new Text("You Lost!", "30pt Arial");
-       txt.setPosition(getWidth()/2, getHeight()/2);
-       txt.setColor(Color.red);
-       add(txt);
-    }
-    if(character.getX + 30 == (obst.getX)){
-       lost = true;
-    }
-    if(character.getY + 30 == (obst.getY)){
-       lost = true;
-    }
-    if(character.getY - 30 == (obst.getY)){
-       lost = true;
-    }
-    if(character.getX + 30 == (obst2.getX)){
-       lost = true;
-    }
-    if(character.getY + 30 == (obst2.getY)){
-       lost = true;
-    }
-    if(character.getY - 30 == (obst2.getY)){
-       lost = true;
-    }
+// function moveCharacter() {
+//     character.move(dx,dy);
+//     if(smooth == true){
+//       dy = dy-1/6;
+//       if(dy <= MAX_DY){
+//           dy = MAX_DY;
+//       }
+//     }
+//     if(smooth == false){
+//       dy = dy+1/5;
+//       if(dy >= 4){
+//           dy = 4;
+//       }
+//     }
+//     mouseDragMethod(moveCharacter);
+//     // mouseDownMethod(swap);
+//     // mouseUpMethod(swap2);
+//     if(character.getY() <= getHeight()-getHeight()){
+//       lost = true;
+//     }
+//     if(character.getY()+30 >= getHeight()){
+//       lost = true;
+//     }
+//     if(lost == true){
+//         stopTimer(moveCharacter);
+//         stopTimer(dustCommand);
+//     }
+//     if(lost == true){
+//       var txt = new Text("You Lost!", "30pt Arial");
+//       txt.setPosition(getWidth()/2, getHeight()/2);
+//       txt.setColor(Color.red);
+//       add(txt);
+//     }
+//     if(character.getX + 30 == (obst.getX)){
+//       lost = true;
+//     }
+//     if(character.getY + 30 == (obst.getY)){
+//       lost = true;
+//     }
+//     if(character.getY - 30 == (obst.getY)){
+//       lost = true;
+//     }
+//     if(character.getX + 30 == (obst2.getX)){
+//       lost = true;
+//     }
+//     if(character.getY + 30 == (obst2.getY)){
+//       lost = true;
+//     }
+//     if(character.getY - 30 == (obst2.getY)){
+//       lost = true;
+//     }
 
-// top front corner
-    var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY());
-    if (wall != null && wall.getColor() != Color.black) lost = true;
+// // top front corner
+//     var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY());
+//     if (wall != null && wall.getColor() != Color.black) lost = true;
 
-    // top back corner
-    var wallTwo = getElementAt(character.getX()-1, character.getY());
-    if (wallTwo != null && wallTwo.getColor() != Color.black) lost = true;
+//     // top back corner
+//     var wallTwo = getElementAt(character.getX()-1, character.getY());
+//     if (wallTwo != null && wallTwo.getColor() != Color.black) lost = true;
 
-    // bottom front corner
-        var wallThree = getElementAt(character.getX(), character.getY()+character.getHeight() + 1);
-    if (wallThree != null && wallThree.getColor() != Color.black) lost = true;
+//     // bottom front corner
+//         var wallThree = getElementAt(character.getX(), character.getY()+character.getHeight() + 1);
+//     if (wallThree != null && wallThree.getColor() != Color.black) lost = true;
 
-    // bottom back corner
-    var wallFour = getElementAt(character.getX()+character.getWidth(), character.getY()+character.getHeight() + 1);
-    if (wallFour != null && wallFour.getColor() != Color.black) lost = true;
-}
-function swap(e){
-    smooth = true;
-}
-function swap2(e){
-    smooth = false;
-}
+//     // bottom back corner
+//     var wallFour = getElementAt(character.getX()+character.getWidth(), character.getY()+character.getHeight() + 1);
+//     if (wallFour != null && wallFour.getColor() != Color.black) lost = true;
+// }
+// function swap(e){
+//     smooth = true;
+// }
+// function swap2(e){
+//     smooth = false;
+// }
 function moveObst(){
+             //println(obst.getX());
+
     obst.move(ax,ay);
     obst2.move(ax2,ay2);
-    if(obst.getX() + 30 == 0){
-        obst.setPosition(getWidth(), Randomizer.nextInt
-        (0, getHeight() - 90));
+    
+             //println(obst.getX());
+
+    if(obst.getX() + 30 < 0){
+        obst.setPosition(getWidth(), Randomizer.nextInt(0, getHeight() - 90));
+        //println('reset')
     }
-    if(obst2.getX() + 30 == 0){
-        obst.setPosition(getWidth(), Randomizer.nextInt
-        (0, getHeight() - 90));
+    if(obst2.getX() + 30 < 0){
+        obst2.setPosition(getWidth(), Randomizer.nextInt(0, getHeight() - 90));
     }
-    if(lost == true){
+    if(lost){
         stopTimer(moveObst);
+        println('lost')
     }
-    //obst2.setColor(Randomizer.nextColor());
+    obst2.setColor(Randomizer.nextColor());
+    obst.setColor(Randomizer.nextColor());
+    
+    //        println(obst.getX());
+
 }
 function dustCommand(){
     if (clockCount % delay == 0) {
@@ -151,9 +162,9 @@ function dustCommand(){
 function makeDust(){
     var circle = new Circle(3);
     circle.setPosition(character.getX(), character.getY()+30);
-    circle.setColor(Color.white);
+    circle.setColor(Randomizer.nextColor());
     dust.push(circle);
-    add(circle)
+    add(circle);
 }
 function moveDust(){
     var size = 4;
@@ -182,6 +193,17 @@ function makeText(){
     points++;
     if(lost == true){
         stopTimer(makeText);
+    }
+}
+function moveCharacter(e){
+    if(0<=e.getX() && e.getX()<getWidth()){
+        if(0<=e.getY() && e.getY()<getHeight()-50){
+            character.setPosition(e.getX()-30, e.getY()-30);
+        }
+    }
+    var brickTest = character.getX()+63
+    if(character.getColor() != Color.black){
+        lost=true;
     }
 }
 // function makeRect(width, height, x, y, color){
