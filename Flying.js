@@ -21,7 +21,7 @@ var delay = 2;
 var delay2 = 5;
 var obst;
 var obst2;
-
+var contact = false;
 var character = new WebImage("http://www.tidydesign.com/downloads/tidy-twitter-bird.png");
 character.setSize(60,60);
 character.setPosition(100, 100);
@@ -31,10 +31,10 @@ var background = new WebImage("https://fiverr-res.cloudinary.com/images/t_main1,
 background.setSize(getWidth(),getHeight());
 
 obst = new Rectangle(30, 90);
-obst.setPosition(300, Randomizer.nextInt(0, getHeight() + 90));
+obst.setPosition(getWidth()/4*3, Randomizer.nextInt(0, getHeight() + 90));
 obst.setColor(Randomizer.nextColor());
 obst2 = new Rectangle(30, 90);
-obst2.setPosition(300, Randomizer.nextInt(0, getHeight() + 90));
+obst2.setPosition(getWidth()/4*3, Randomizer.nextInt(0, getHeight() + 90));
 obst2.setColor(Randomizer.nextColor());
 
 function start(){
@@ -44,7 +44,9 @@ function start(){
     add(character);
     //setTimer(moveCharacter, 5);
     setTimer(dustCommand, 5);
-    mouseDragMethod(moveCharacter);
+    if (!contact){
+        mouseMoveMethod(moveCharacter);
+    }
     add(obst);
     add(obst2);
     setTimer(moveObst,16);
@@ -52,6 +54,7 @@ function start(){
     // terrain2();
     //setTimer(animateTerrain,25);
     setTimer(makeText,1);
+    //gameOver();
 }
 // function moveCharacter() {
 //     character.move(dx,dy);
@@ -128,29 +131,39 @@ function start(){
 //     smooth = false;
 // }
 function moveObst(){
-             //println(obst.getX());
-
     obst.move(ax,ay);
     obst2.move(ax2,ay2);
-    
-             //println(obst.getX());
-
-    if(obst.getX() + 30 < 0){
-        obst.setPosition(getWidth(), Randomizer.nextInt(0, getHeight() - 90));
-        //println('reset')
-    }
-    if(obst2.getX() + 30 < 0){
-        obst2.setPosition(getWidth(), Randomizer.nextInt(0, getHeight() - 90));
+    var checkUnderBrick2 = getElementAt(obst2.getX(),obst2.getY());
+    if(obst.getX() + 30 < 0){ 
+        var numOfBricks = Randomizer.nextInt(1,2);
+        if (numOfBricks == 2){
+            if(obst.getX() + 30 < 0){
+                obst.setPosition(getWidth(), Randomizer.nextInt(0, getHeight()/2-90));
+            }
+            if(obst2.getX() + 30 < 0){
+                //if(checkUnderBrick2.getColor)
+                obst2.setPosition(getWidth(), Randomizer.nextInt(getHeight()/2, getHeight() - 90));
+            }
+        }else{
+            if(obst.getX() + 30 < 0){
+                obst.setPosition(getWidth(), Randomizer.nextInt(0, getHeight()-90));
+            }
+        }
     }
     if(lost){
         stopTimer(moveObst);
-        println('lost')
+        println('lost');
     }
     obst2.setColor(Randomizer.nextColor());
     obst.setColor(Randomizer.nextColor());
-    
-    //        println(obst.getX());
-
+    var brickTest = getElementAt(character.getX()+63,character.getY());
+    var brickTest2 = getElementAt(character.getX()+63, character.getY()+60);
+    if(brickTest != null && brickTest.getColor() != Color.black || brickTest2 !=null &&
+    brickTest2.getColor() !=Color.black){
+        //lost=true;
+        contact=true;
+        setTimer(moveBack, 16);
+    }
 }
 function dustCommand(){
     if (clockCount % delay == 0) {
@@ -158,6 +171,20 @@ function dustCommand(){
         makeDust();
     }
     clockCount++;
+    if(lost){
+        stopTimer(dustCommand);
+    }
+    var brickTest = getElementAt(character.getX()+63,character.getY());
+    var brickTest2 = getElementAt(character.getX()+63, character.getY()+60);
+    if(brickTest != null && brickTest.getColor() != Color.black || brickTest2 !=null &&
+    brickTest2.getColor() !=Color.black){
+        // lost=true;
+        // var over = new Text("You Lost!", "30pt Arial");
+        // txt.setPosition(getWidth()/2, getHeight()/2);
+        // txt.setColor(Color.red);
+        // add(txt);
+        // println("done");
+    }
 }
 function makeDust(){
     var circle = new Circle(3);
@@ -191,67 +218,57 @@ function makeText(){
     txt.setColor(Color.white);
     add(txt);
     points++;
-    if(lost == true){
+    if(lost){
         stopTimer(makeText);
     }
 }
 function moveCharacter(e){
-    if(0<=e.getX() && e.getX()<getWidth()){
-        if(0<=e.getY() && e.getY()<getHeight()-50){
-            character.setPosition(e.getX()-30, e.getY()-30);
+    if(!lost && !contact){
+        if(0<=e.getX() && e.getX()<getWidth()){
+            if(0<=e.getY() && e.getY()<getHeight()-60){
+                character.setPosition(e.getX()-30, e.getY()-30);
+            }
         }
+        // var brickTest = getElementAt(character.getX()+63,character.getY());
+        // var brickTest2 = getElementAt(character.getX()+63, character.getY()+60);
+        // if(brickTest != null && brickTest.getColor() != Color.black || brickTest2 !=null &&
+        // brickTest2.getColor() !=Color.black){
+        //     //lost=true;
+        //     contact=true;
+        //     setTimer(moveBack, 16);
+        // }
     }
-    var brickTest = character.getX()+63
-    if(character.getColor() != Color.black){
-        lost=true;
+    
+}
+function moveBack(){
+    character.setPosition(obst.getX()-60,character.getY());
+    contact=true;
+    var brickTest = getElementAt(character.getX()+63,character.getY());
+    var brickTest2 = getElementAt(character.getX()+63, character.getY()+60);
+    if(brickTest != null && brickTest.getColor() != Color.black || brickTest2 !=null &&
+    brickTest2.getColor() !=Color.black){
+        contact=false;
+        stopTimer(moveBack);
+    }
+    if(character.getX()+60<0){
+        stopTimer(moveObst);
+        stopTimer(moveBack);
+        stopTimer(moveCharacter);
+        stopTimer(makeText);
+        contact=true;
     }
 }
+// function gameOver(){
+//     if(lost == true){
+//         var over = new Text("You Lost!", "30pt Arial");
+//         txt.setPosition(getWidth()/2, getHeight()/2);
+//         txt.setColor(Color.red);
+//         add(txt);
+//     }
+// }
 // function makeRect(width, height, x, y, color){
 //     var rect = new Rectangle(width, height);
 //     rect.setPosition(x, y);
 //     rect.setColor(color);
 //     add(rect);
-// }
-// function terrain1(){
-//     for(var i = 0; i <= 100; i++){
-//         var rect = new Rectangle(10, Randomizer.nextInt(getHeight()-getHeight(),
-//         getHeight()-getHeight()+50));
-//         rect.setPosition(0+numBlocks, getHeight()-getHeight());
-//         rect.setColor(Color.green);
-//         add(rect);
-//         numBlocks = numBlocks + 5;
-//         moveTerrain.push(rect);
-//     }
-// }
-// function terrain2(){
-//     for(var i = 0; i <= 100; i++){
-//         var rect = new Rectangle(10, Randomizer.nextInt(getHeight()-getHeight(),
-//         getHeight()-getHeight()+50));
-//         rect.setPosition(getWidth()-numBlocksTwo, getHeight()-rect.getHeight());
-//         rect.setColor(Color.green);
-//         add(rect);
-//         numBlocksTwo = numBlocksTwo + 5;
-//         moveTerrain2.push(rect);
-//     }
-// }
-// function animateTerrain(){
-//     for(var i = 0; i <= 100; i++){
-//         moveTerrain[i].move(-3,0)
-//         moveTerrain2[i].move(-3,0)
-//         if(moveTerrain[i].getX() < 0){
-//             moveTerrain[i].setPosition(getWidth(),0)
-//         }
-//         if(moveTerrain2[i].getX() < 0){
-//             moveTerrain2[i].setPosition(getWidth(),getHeight()-moveTerrain2[i].getHeight())
-            
-//         }
-//         if(lost == true){
-//         stopTimer(animateTerrain);
-//         }
-//     }
-//     if (clockCount % delay == 0) {
-//         moveDust();
-//         makeDust();
-//     }
-//     clockCount++;
 // }
