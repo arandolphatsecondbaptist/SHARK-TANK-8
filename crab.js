@@ -13,36 +13,28 @@ var chomped;
 var meme1;
 var meme2;
 var meme3;
+var meme4;
+var trace;
+var grant;
+var muellerSkin;
+var traceSkin;
+var regularSkin;
+var johnSkin;
+var distractions = [];
+var menuText;
+var playBox;
+var playText;
+var skinText;
+var carterSkin;
+var ocean;
 
 function start() {
     
     crabRave = new Audio("https://codehs.com/uploads/8a4d0e0739adc7c116da54963ad295d1");
     
-    
-    // crabRave.play();
-    
     startMenu();
     mouseClickMethod(startGame);
     
-    // inOcean();
-    // keyDownMethod(jump);
-    // setTimer(moveSharks, 50);
-    // timer();
-    // setTimer(timer, 50);
-    // setTimer(moveFish, 65);
-    
-    // distractions();
-}
-
-function startGame(e){
-    if(e.getX() > 210 && e.getX() < 510 && e.getY() > getHeight()/2 && e.getY() < getHeight()/2 + 100){
-        inOcean();
-        keyDownMethod(jump);
-        setTimer(moveSharks, 50);
-        timer();
-        setTimer(timer, 50);
-        setTimer(moveFish, 65);
-    }
 }
 
 function startMenu(){
@@ -51,20 +43,21 @@ function startMenu(){
     ocean.setPosition(0,0);
     add(ocean);
     
-    var menuText = new Text("Crab Run", "30pt Arcade Normal");
+    menuText = new Text("Crab Run", "30pt Arcade Normal");
     menuText.setPosition(200, 100);
     menuText.setColor(Color.white);
     add(menuText);
     
-    var playBox = new Rectangle(300, 100);
+    playBox = new Rectangle(300, 100);
     playBox.setPosition(210, getHeight()/2);
     playBox.setColor("#000080");
     add(playBox);
     
-    var playText = new Text("Play", "30pt Arcade Normal");
+    playText = new Text("Play", "30pt Arcade Normal");
     playText.setPosition(275, getHeight()/2 + 70);
     playText.setColor(Color.white);
     add(playText);
+    
 }
 function scoreboard(){
     
@@ -83,22 +76,22 @@ function scoreboard(){
     spot1.setColor(Color.white);
     add(spot1);
     
-    var spot2 = new Text("2. Mueller 2001", "10pt Arial");
+    var spot2 = new Text("2. Mueller and Spurlin 2001", "10pt Arial");
     spot2.setPosition(getWidth()/2 - 40, 120);
     spot2.setColor(Color.white);
     add(spot2);
     
-    var spot3 = new Text("3. ", "10pt Arial");
+    var spot3 = new Text("3. Spurlin 1791", "10pt Arial");
     spot3.setPosition(getWidth()/2 - 40, 140);
     spot3.setColor(Color.white);
     add(spot3);
     
-    var spot4 = new Text("4. ", "10pt Arial");
+    var spot4 = new Text("4. Vincent 1730", "10pt Arial");
     spot4.setPosition(getWidth()/2 - 40, 160);
     spot4.setColor(Color.white);
     add(spot4);
     
-    var spot5 = new Text("5. Carter 507", "10pt Arial");
+    var spot5 = new Text("5. Max 1169", "10pt Arial");
     spot5.setPosition(getWidth()/2 - 40, 180);
     spot5.setColor(Color.white);
     add(spot5);
@@ -112,15 +105,98 @@ function scoreboard(){
     trace.setPosition(375, 50);
     trace.setSize(400, 400);
     add(trace);
+    
+    var yourScore= println("Your score was " + count);
 }
 
+function skinMenu(){
+    skinText = new Text("Select Your Skin", "30pt Arcade Normal");
+    skinText.setPosition(60, 100);
+    skinText.setColor(Color.white);
+    add(skinText);
+    
+    muellerSkin = new WebImage("https://codehs.com/uploads/9a7fc089b8e4e9704278ce1a62bf6590");
+    muellerSkin.setSize(75, 75);
+    muellerSkin.setPosition(40, 175);
+    muellerSkin.isMueller = true;
+    add(muellerSkin);
+    
+    traceSkin = new WebImage("https://codehs.com/uploads/f24d1e08e21ce16bd2929365f77b4a65");
+    traceSkin.setSize(75, 75);
+    traceSkin.setPosition(180, 175);
+    traceSkin.isTrace = true;
+    add(traceSkin);
+    
+    regularSkin = new WebImage("https://codehs.com/uploads/665ff371fc5b9cf0d2ea0a01f645ebf7");
+    regularSkin.setSize(75, 75);
+    regularSkin.setPosition(460, 175);
+    regularSkin.isRegular = true;
+    add(regularSkin);
+    
+    johnSkin = new WebImage("https://codehs.com/uploads/295748d73d03fdad77fdd537ea1091f4");
+    johnSkin.setSize(75, 75);
+    johnSkin.setPosition(605, 175);
+    johnSkin.isJohn = true;
+    add(johnSkin);
+    
+    carterSkin = new WebImage("https://codehs.com/uploads/85f4e705c4fd6aa6ba6bc6bf3696883d");
+    carterSkin.setSize(75, 75);
+    carterSkin.setPosition(325, 175);
+    carterSkin.isCarter = true;
+    add(carterSkin);
+}
+
+function startGame(e){
+    // get elem at the click
+    var elem = getElementAt(e.getX(), e.getY());
+    var crabSelected = false;
+    
+    if(e.getX() > 210 && e.getX() < 510 && e.getY() > getHeight()/2 && e.getY() < getHeight()/2 + 100){
+        remove(menuText);
+        remove(playBox);
+        remove(playText);
+        skinMenu();
+    }
+    
+    // if clicked on Mueller
+    if(elem.isMueller) {
+        crab = muellerSkin;
+        //if clicked on Trace
+    } else if (elem.isTrace){
+        crab = traceSkin;
+        //if clicked on Standard
+    } else if (elem.isRegular){
+        crab = regularSkin;
+        //if clicked on John
+    } else if (elem.isJohn){
+        crab = johnSkin;
+        //if clicked on Carter
+    } else if (elem.isCarter){
+        crab = carterSkin;
+    }
+    
+    if (crab) {
+        crabRave.play();
+        keyDownMethod(jump);
+        timer();
+        setTimer(timer, 50);
+        setTimer(moveFish, 65);
+        inOcean();
+        setTimer(moveSharks, 50);
+    }
+    
+}
 
 function jump(e){
+    
+    
     if (e.keyCode == Keyboard.UP && isOnTrack) {
         crab.move(0, -70);
         isOnTrack = false;
         setTimeout(fall, 650);
     }
+    
+
 }
 
 function fall(){
@@ -138,15 +214,19 @@ function moveSharks(){
     if(shark.getX() + shark.getWidth() > getWidth()/4){
         shark2.setPosition(getWidth(), getHeight() - 80);
     }
+    
+    // move distractions
+    for(var elm of distractions){
+        elm.move(elm.dx,elm.dy)
+    }
 }
 
-function inOcean(){
-    var ocean = new WebImage("https://codehs.com/uploads/a4709d2318f9330e84cd0a3668ce45ed");
+function inOcean(){ println('ocean')
+    ocean = new WebImage("https://codehs.com/uploads/a4709d2318f9330e84cd0a3668ce45ed");
     ocean.setSize(getWidth(), getHeight());
     ocean.setPosition(0,0);
     add(ocean);
     
-    crab = new WebImage("https://codehs.com/uploads/ad80a068fa913a2c10dd9eeab492980d");
     crab.setSize(75,75);
     crab.setPosition(0, getHeight() - 80);
     add(crab);
@@ -186,32 +266,64 @@ function moveFish(){
     }
 }
 
-// function distractions(){ 
-//     meme1 = new WebImage("https://codehs.com/uploads/8a8b517a7b75bc62355684143bb2d079");
-//     meme1.setSize(150,150);
-//     if(count = 500){
-//         meme1.setPosition(0, 0);
-//         add(meme1);
-//         meme1.move(5,5);
-//     }
+function distract(e){ 
+    meme1 = new WebImage("https://codehs.com/uploads/8a8b517a7b75bc62355684143bb2d079");
+    meme1.setSize(200,200);
+    meme1.setPosition(Randomizer.nextInt(), Randomizer.nextInt());
+    if(count == 500){
+        meme1.dx = 2;
+        meme1.dy = 2;
+        distractions.push(meme1)
+        add(meme1);
+    }
     
-//     meme2 = new WebImage("https://codehs.com/uploads/b2369f516350ada4533800e56c67ee45");
-//     meme2.setSize(150,150);
-//     if(count = 1000){
-//         meme2.setPosition(0, 0);
-//         add(meme2);
-//         meme2.move(5,5);
-//     }
+    meme2 = new WebImage("https://codehs.com/uploads/b2369f516350ada4533800e56c67ee45");
+    meme2.setSize(200,200);
+    meme2.setPosition(Randomizer.nextInt(), Randomizer.nextInt());
+    if(count == 1000){
+        meme2.dx = 2;
+        meme2.dy = 2;
+        distractions.push(meme2);
+        add(meme2);
+    }
     
-//     meme3 = new WebImage("https://codehs.com/uploads/002d29828130ac4a00fb69da212d4535");
-//     meme3.setSize(150,150);
-//     if(count = 1500){
-//         meme3.setPosition(0, 0);
-//         add(meme3);
-//         meme3.move(5,5);
-//     }
-// }
-
+    meme3 = new WebImage("https://codehs.com/uploads/002d29828130ac4a00fb69da212d4535");
+    meme3.setSize(200,200);
+    meme3.setPosition(Randomizer.nextInt(), Randomizer.nextInt());
+    if(count == 1500){
+        meme3.dx = 2;
+        meme3.dy = 2;
+        distractions.push(meme3);
+        add(meme3);
+    }
+    meme4 = new WebImage("https://codehs.com/uploads/173cb5feb63f04df1903c7f0032e0803");
+    meme4.setSize(200, 200);
+    meme4.setPosition(Randomizer.nextInt(), Randomizer.nextInt());
+    if(count == 2000){
+        meme4.dx = 2;
+        meme4.dy = 2;
+        distractions.push(meme4);
+        add(meme4);
+    }
+    trace = new WebImage("https://codehs.com/uploads/7a78c0123b928f6466e615e8163a858f");
+    trace.setSize(600,400);
+    trace.setPosition(Randomizer.nextInt(), Randomizer.nextInt());
+    if(count == 750){
+        trace.dx = 2;
+        trace.dy = 2;
+        distractions.push(trace);
+        add(trace);
+    }
+    grant = new WebImage("https://codehs.com/uploads/b05ac59e1ffd4f1f58403dd9a168c70c");
+    grant.setSize(400, 600);
+    grant.setPosition(Randomizer.nextInt(), Randomizer.nextInt());
+    if(count == 1250){
+        grant.dx = 2;
+        grant.dy = 2;
+        distractions.push(grant);
+        add(grant);
+    }
+}
 
 function timer(){
     remove(display);
@@ -223,7 +335,7 @@ function timer(){
     chomped = new Text("You got chomped!", "30pt Arcade Normal");
     chomped.setPosition(70, getHeight()/2);
     chomped.setColor(Color.white);
-    if(hit.isShark){
+    if(hit.isShark || hit.isShark2){
         println ('you got chomped');
         stopTimer(timer);
         stopTimer(moveSharks);
@@ -232,15 +344,9 @@ function timer(){
         add(chomped);
         setTimeout(scoreboard,3000);
     }
-    if(hit.isShark2){
-        println('you got chomped');
-        stopTimer(timer);
-        stopTimer(moveSharks);
-        stopTimer(moveFish);
-        crabRave.pause();
-        add(chomped);
-        setTimeout(scoreboard,3000);
-        
-    }
+   
     count++;
+    if(count%250 == 0){
+       distract();
+    }
 }
