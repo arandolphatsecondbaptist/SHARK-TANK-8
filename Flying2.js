@@ -33,7 +33,6 @@ var screen2;
 var moveScreen;
 var background;
 var song;
-
 var character = new WebImage("https://codehs.com/uploads/1e22a8ce9c9f5b2aee1b80700d726173");
 character.setSize(60,60);
 character.setPosition(100, 100);
@@ -41,19 +40,22 @@ character.setColor(Color.blue);
 //character.setRotation(-10);
 var background = new WebImage("https://codehs.com/uploads/c87910aa3f30df1f20852df29e0b73e8");
 background.setSize(getWidth(),getHeight());
-
 obst = new Circle(10);
 obst.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
 obst.setColor(Color.white);
+obst.isOrb = true;
 obst2 = new Circle(10);
 obst2.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
 obst2.setColor(Color.white);
+obst2.isOrb = true;
 obst3 = new Circle(10);
 obst3.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
 obst3.setColor(Color.white);
+obst3.isOrb = true;
 obst4 = new Circle(10);
 obst4.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
 obst4.setColor(Color.white);
+obst4.isOrb = true;
 
 function start(){
     add(background);
@@ -61,8 +63,12 @@ function start(){
    // getHeight()-getHeight(),Color.black);
 //   add(background);
     song();
+    runCode();
+}
+function runCode(){
     add(character);
-    setTimer(moveCharacter, 5);
+    mouseMoveMethod(moveCharacter);
+    //setTimer(moveCharacter, 5);
     setTimer(dustCommand, 5);
     add(obst);
     add(obst2);
@@ -74,28 +80,26 @@ function start(){
     //setTimer(animateTerrain,25);
     setTimer(makeText,1);
 }
-function moveCharacter() {
-    character.move(dx,dy);
-    if(smooth == true){
-       dy = dy-1/6;
-       if(dy <= MAX_DY){
-           dy = MAX_DY;
-       }
-    }
-    if(smooth == false){
-       dy = dy+1/5;
-       if(dy >= 4){
-           dy = 4;
-       }
-    }
-    mouseDownMethod(swap);
-    mouseUpMethod(swap2);
-    if(character.getY() <= getHeight()-getHeight()){
-       lost = true;
-    }
-    if(character.getY()+30 >= getHeight()){
-       lost = true;
-    }
+function moveCharacter(e) {
+    character.setPosition(e.getX()-30, e.getY()-30);
+    // if(smooth == true){
+    //   dy = dy-1/6;
+    //   if(dy <= MAX_DY){
+    //       dy = MAX_DY;
+    //   }
+    // }
+    // if(smooth == false){
+    //   dy = dy+1/5;
+    //   if(dy >= 4){
+    //       dy = 4;
+    //   }
+    // }
+    // if(character.getY() <= 0){
+    //   lost = true;
+    // }
+    // if(character.getY()+30 >= getHeight()){
+    //   lost = true;
+    // }
     if(lost == true){
         stopTimer(moveCharacter);
         stopTimer(dustCommand);
@@ -106,58 +110,65 @@ function moveCharacter() {
        txt.setColor(Color.red);
        add(txt);
     }
-    if(character.getX + 30 == (obst.getX)){
-       lost = true;
-    }
-    if(character.getY + 30 == (obst.getY)){
-       lost = true;
-    }
-    if(character.getY - 30 == (obst.getY)){
-       lost = true;
-    }
-    if(character.getX + 30 == (obst2.getX)){
-       lost = true;
-    }
-    if(character.getY + 30 == (obst2.getY)){
-       lost = true;
-    }
-    if(character.getY - 30 == (obst2.getY)){
-       lost = true;
-    }
-    if(character.getX + 30 == (obst3.getX)){
-       lost = true;
-    }
-    if(character.getY + 30 == (obst3.getY)){
-       lost = true;
-    }
-    if(character.getY - 30 == (obst3.getY)){
-       lost = true;
-    }
-    if(character.getX + 30 == (obst4.getX)){
-       lost = true;
-    }
-    if(character.getY + 30 == (obst4.getY)){
-       lost = true;
-    }
-    if(character.getY - 30 == (obst4.getY)){
-       lost = true;
-    }
-
+    // if(character.getX + 30 == (obst.getX)){
+    //   lost = true;
+    //   println("1111111");
+    // }
+    // if(character.getY + 30 == (obst.getY)){
+    //   lost = true;
+    // }
+    // if(character.getY - 30 == (obst.getY)){
+    //   lost = true;
+    // }
+    // if(character.getX + 30 == (obst2.getX)){
+    //   lost = true;
+    // }
+    // if(character.getY + 30 == (obst2.getY)){
+    //   lost = true;
+    // }
+    // if(character.getY - 30 == (obst2.getY)){
+    //   lost = true;
+    // }
+    // if(character.getX + 30 == (obst3.getX)){
+    //   lost = true;
+    // }
+    // if(character.getY + 30 == (obst3.getY)){
+    //   lost = true;
+    // }
+    // if(character.getY - 30 == (obst3.getY)){
+    //   lost = true;
+    // }
+    // if(character.getX + 30 == (obst4.getX)){
+    //   lost = true;
+    // }
+    // if(character.getY + 30 == (obst4.getY)){
+    //   lost = true;
+    // }
+    // if(character.getY - 30 == (obst4.getY)){
+    //   lost = true;
+    // }
 // top front corner
-    var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY());
-    if (wall != null && wall.getColor() != Color.black) lost = true;
+    var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY()),
+    wallTwo = getElementAt(character.getX()-1, character.getY()-1),
+    wallThree = getElementAt(character.getX(), character.getY()+character.getHeight() + 1),
+    wallFour = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight() + 1),
+    wallFive = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight()/2);
 
-    // top back corner
-    var wallTwo = getElementAt(character.getX()-1, character.getY());
-    if (wallTwo != null && wallTwo.getColor() != Color.black) lost = true;
-
-    // bottom front corner
-        var wallThree = getElementAt(character.getX(), character.getY()+character.getHeight() + 1);
-    if (wallThree != null && wallThree.getColor() != Color.black) lost = true;
-
-    // bottom back corner
-    var wallFour = getElementAt(character.getX()+character.getWidth(), character.getY()+character.getHeight() + 1);
-    if (wallFour != null && wallFour.getColor() != Color.black) lost = true;
+    if (wall) {
+        if(wall.isOrb) lost = true;
+    }
+    if (wallTwo) {
+        if(wallTwo.isOrb) lost = true;
+    }
+    if (wallThree) {
+        if(wallThree.isOrb) lost = true;
+    }
+    if (wallFour) {
+        if(wallFour.isOrb) lost = true;
+    }
+    if (wallFive) {
+        if(wallFive.isOrb) lost = true;
+    }
 }
 function swap(e){
     smooth = true;
@@ -238,9 +249,55 @@ function makeText(){
         stopTimer(makeText);
     }
 }
-
 function song(){
     var mySong = new Audio("https://codehs.com/uploads/f7684b173a1adf38951ef3ee90e11b2f")
     mySong.play();
     mySong.loop = true;
+}
+function restart(){
+    points = 0;
+    lost = false;
+    checkOn = false;
+    MAX_DY = -4;
+    dx = 0;
+    dy = 2;
+    ax = -2;
+    ax2 = -2;
+    ax3 = -3;
+    ax4 = -3;
+    ay = 0;
+    ay2 = 0;
+    ay3 = 0;
+    ay4 = 3;
+    smooth = false;
+    numBlocks = 0;
+    numBlocksTwo = 0;
+    moveTerrain = [];
+    moveTerrain2 = [];
+    dust = [];
+    clockCount = 0;
+    delay = 2;
+    delay2 = 5;
+    obst;
+    obst2;
+    obst3;
+    obst4;
+    character = new WebImage("https://codehs.com/uploads/1e22a8ce9c9f5b2aee1b80700d726173");
+    character.setSize(60,60);
+    character.setPosition(100, 100);
+    character.setColor(Color.blue);
+    //character.setRotation(-10);
+    obst = new Circle(10);
+    obst.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+    obst.setColor(Color.white);
+    obst2 = new Circle(10);
+    obst2.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+    obst2.setColor(Color.white);
+    obst3 = new Circle(10);
+    obst3.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+    obst3.setColor(Color.white);
+    obst4 = new Circle(10);
+    obst4.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+    obst4.setColor(Color.white);
+    runCode();
 }
