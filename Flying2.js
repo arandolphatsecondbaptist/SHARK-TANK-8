@@ -56,7 +56,9 @@ obst4 = new Circle(10);
 obst4.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
 obst4.setColor(Color.white);
 obst4.isOrb = true;
-
+var scoreTxt;
+var whiteBox;
+var tryAgainTxt;
 function start(){
     add(background);
     //makeRect(getWidth(),getHeight(),getWidth()-getWidth(),
@@ -81,94 +83,30 @@ function runCode(){
     setTimer(makeText,1);
 }
 function moveCharacter(e) {
-    character.setPosition(e.getX()-30, e.getY()-30);
-    // if(smooth == true){
-    //   dy = dy-1/6;
-    //   if(dy <= MAX_DY){
-    //       dy = MAX_DY;
-    //   }
-    // }
-    // if(smooth == false){
-    //   dy = dy+1/5;
-    //   if(dy >= 4){
-    //       dy = 4;
-    //   }
-    // }
-    // if(character.getY() <= 0){
-    //   lost = true;
-    // }
-    // if(character.getY()+30 >= getHeight()){
-    //   lost = true;
-    // }
-    if(lost == true){
-        stopTimer(moveCharacter);
-        stopTimer(dustCommand);
-    }
-    if(lost == true){
-       var txt = new Text("You Lost!", "30pt Arial");
-       txt.setPosition(getWidth()/2, getHeight()/2);
-       txt.setColor(Color.red);
-       add(txt);
-    }
-    // if(character.getX + 30 == (obst.getX)){
-    //   lost = true;
-    //   println("1111111");
-    // }
-    // if(character.getY + 30 == (obst.getY)){
-    //   lost = true;
-    // }
-    // if(character.getY - 30 == (obst.getY)){
-    //   lost = true;
-    // }
-    // if(character.getX + 30 == (obst2.getX)){
-    //   lost = true;
-    // }
-    // if(character.getY + 30 == (obst2.getY)){
-    //   lost = true;
-    // }
-    // if(character.getY - 30 == (obst2.getY)){
-    //   lost = true;
-    // }
-    // if(character.getX + 30 == (obst3.getX)){
-    //   lost = true;
-    // }
-    // if(character.getY + 30 == (obst3.getY)){
-    //   lost = true;
-    // }
-    // if(character.getY - 30 == (obst3.getY)){
-    //   lost = true;
-    // }
-    // if(character.getX + 30 == (obst4.getX)){
-    //   lost = true;
-    // }
-    // if(character.getY + 30 == (obst4.getY)){
-    //   lost = true;
-    // }
-    // if(character.getY - 30 == (obst4.getY)){
-    //   lost = true;
-    // }
-// top front corner
-    var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY()),
-    wallTwo = getElementAt(character.getX()-1, character.getY()-1),
-    wallThree = getElementAt(character.getX(), character.getY()+character.getHeight() + 1),
-    wallFour = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight() + 1),
-    wallFive = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight()/2);
-
-    if (wall) {
-        if(wall.isOrb) lost = true;
-    }
-    if (wallTwo) {
-        if(wallTwo.isOrb) lost = true;
-    }
-    if (wallThree) {
-        if(wallThree.isOrb) lost = true;
-    }
-    if (wallFour) {
-        if(wallFour.isOrb) lost = true;
-    }
-    if (wallFive) {
-        if(wallFive.isOrb) lost = true;
-    }
+    if (!lost){
+        character.setPosition(e.getX()-30, e.getY()-30);
+        // if(smooth == true){
+        //   dy = dy-1/6;
+        //   if(dy <= MAX_DY){
+        //       dy = MAX_DY;
+        //   }
+        // }
+        // if(smooth == false){
+        //   dy = dy+1/5;
+        //   if(dy >= 4){
+        //       dy = 4;
+        //   }
+        // }
+        // if(character.getY() <= 0){
+        //   lost = true;
+        // }
+        // if(character.getY()+30 >= getHeight()){
+        //   lost = true;
+        // }
+        if(lost){
+            stopTimer(moveCharacter);
+            stopTimer(dustCommand);
+        }
 }
 function swap(e){
     smooth = true;
@@ -176,6 +114,7 @@ function swap(e){
 function swap2(e){
     smooth = false;
 }
+
 function moveObst(){
     obst.move(ax,ay);
     obst2.move(ax2,ay2);
@@ -183,24 +122,68 @@ function moveObst(){
     obst4.move(ax4,ay4);
     if(obst.getX() + 30 == 0){
         obst.setPosition(getWidth(), Randomizer.nextInt
-        (10, getHeight()/3));
+        (10, getHeight()/2));
         println ("1");
     }
     if(obst2.getX() + 30 == 0){
         obst2.setPosition(getWidth(), Randomizer.nextInt
-        (getHeight()/3, getHeight()/3));
+        (getHeight()/2, getHeight()-10));
         println("2");
     }
-    if(obst3.getX() + 30 == 0){
-        obst3.setPosition(getWidth(), Randomizer.nextInt
-        (getHeight()/3, getHeight()/3));
-        println("3");
+    
+    
+        // top front corner
+        var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY()),
+        wallTwo = getElementAt(character.getX()-1, character.getY()-1),
+        wallThree = getElementAt(character.getX(), character.getY()+character.getHeight() + 1),
+        wallFour = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight() + 1),
+        wallFive = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight()/2);
+    
+        if (wall) {
+            if(wall.isOrb) lost = true;
+        }
+        if (wallTwo) {
+            if(wallTwo.isOrb) lost = true;
+        }
+        if (wallThree) {
+            if(wallThree.isOrb) lost = true;
+        }
+        if (wallFour) {
+            if(wallFour.isOrb) lost = true;
+        }
+        if (wallFive) {
+            if(wallFive.isOrb) lost = true;
+        }
+    
+    if(lost){
+        stopTimer(makeText);
+        scoreTxt = new Text("YOUR SCORE WAS: "+ points, "30pt Arial");
+        scoreTxt.setPosition(getWidth()/2-250, getHeight()/2-50);
+        scoreTxt.setColor(Color.red);
+        add(scoreTxt);
+        whiteBox = new Rectangle(400, 75);
+        whiteBox.setPosition(getWidth()/2-200, getHeight()/2);
+        whiteBox.setColor(Color.white);
+        whiteBox.tryAgain=true;
+        add (whiteBox);
+        tryAgainTxt = new Text("TRY AGAIN?", "30pt Arial");
+        tryAgainTxt.setPosition(getWidth()/2-120, getHeight()/2+53);
+        tryAgainTxt.setColor(Color.red);
+        tryAgainTxt.tryAgain=true
+        add(tryAgainTxt);
+        mouseClickMethod(restart);
     }
-    if(obst4.getX() + 30 == 0){
-        obst4.setPosition(getWidth(), Randomizer.nextInt
-        (getHeight()/3, getHeight()/3));
-        println("3");
-    }
+    
+    // if(obst3.getX() + 30 == 0){
+    //     obst3.setPosition(getWidth(), Randomizer.nextInt
+    //     (getHeight()/3, getHeight()/3));
+    //     println("3");
+    // }
+    // if(obst4.getX() + 30 == 0){
+    //     obst4.setPosition(getWidth(), Randomizer.nextInt
+    //     (getHeight()/3, getHeight()/3));
+    //     println("3");
+    // }
     if(lost == true){
         stopTimer(moveObst);
     }
@@ -219,6 +202,9 @@ function makeDust(){
     circle.setColor(Color.white);
     dust.push(circle);
     add(circle)
+    if(lost){
+        remove(circle);
+    }
 }
 function moveDust(){
     var size = 4;
@@ -245,59 +231,68 @@ function makeText(){
     txt.setColor(Color.white);
     add(txt);
     points++;
-    if(lost == true){
-        stopTimer(makeText);
-    }
 }
 function song(){
     var mySong = new Audio("https://codehs.com/uploads/f7684b173a1adf38951ef3ee90e11b2f")
     mySong.play();
     mySong.loop = true;
 }
-function restart(){
-    points = 0;
-    lost = false;
-    checkOn = false;
-    MAX_DY = -4;
-    dx = 0;
-    dy = 2;
-    ax = -2;
-    ax2 = -2;
-    ax3 = -3;
-    ax4 = -3;
-    ay = 0;
-    ay2 = 0;
-    ay3 = 0;
-    ay4 = 3;
-    smooth = false;
-    numBlocks = 0;
-    numBlocksTwo = 0;
-    moveTerrain = [];
-    moveTerrain2 = [];
-    dust = [];
-    clockCount = 0;
-    delay = 2;
-    delay2 = 5;
-    obst;
-    obst2;
-    obst3;
-    obst4;
-    character = new WebImage("https://codehs.com/uploads/1e22a8ce9c9f5b2aee1b80700d726173");
-    character.setSize(60,60);
-    character.setPosition(100, 100);
-    character.setColor(Color.blue);
-    //character.setRotation(-10);
-    obst = new Circle(10);
-    obst.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
-    obst.setColor(Color.white);
-    obst2 = new Circle(10);
-    obst2.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
-    obst2.setColor(Color.white);
-    obst3 = new Circle(10);
-    obst3.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
-    obst3.setColor(Color.white);
-    obst4 = new Circle(10);
-    obst4.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
-    obst4.setColor(Color.white);
-    runCode();
+function restart(e){
+    var tryBox = getElementAt(e.getX(),e.getY());
+    if(tryBox.tryAgain){
+        remove(character);
+        remove(dust);
+        remove(obst);
+        remove(obst2);
+        remove(obst3);
+        remove(obst4)
+        remove(tryAgainTxt);
+        remove(whiteBox);
+        remove(scoreTxt);
+        points = 0;
+        lost = false;
+        checkOn = false;
+        MAX_DY = -4;
+        dx = 0;
+        dy = 2;
+        ax = -2;
+        ax2 = -2;
+        ax3 = -3;
+        ax4 = -3;
+        ay = 0;
+        ay2 = 0;
+        ay3 = 0;
+        ay4 = 3;
+        smooth = false;
+        numBlocks = 0;
+        numBlocksTwo = 0;
+        moveTerrain = [];
+        moveTerrain2 = [];
+        dust = [];
+        clockCount = 0;
+        delay = 2;
+        delay2 = 5;
+        obst;
+        obst2;
+        obst3;
+        obst4;
+        character = new WebImage("https://codehs.com/uploads/1e22a8ce9c9f5b2aee1b80700d726173");
+        character.setSize(60,60);
+        character.setPosition(100, 100);
+        character.setColor(Color.blue);
+        //character.setRotation(-10);
+        obst = new Circle(10);
+        obst.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+        obst.setColor(Color.white);
+        obst2 = new Circle(10);
+        obst2.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+        obst2.setColor(Color.white);
+        obst3 = new Circle(10);
+        obst3.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+        obst3.setColor(Color.white);
+        obst4 = new Circle(10);
+        obst4.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+        obst4.setColor(Color.white);
+        runCode();
+    }
 }
