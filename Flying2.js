@@ -17,9 +17,8 @@ var ay4 = 3;
 var smooth = false;
 var numBlocks = 0;
 var numBlocksTwo = 0;
-var moveTerrain = [];
-var moveTerrain2 = [];
 var dust = [];
+var orbs =[];
 var clockCount = 0;
 var delay = 2;
 var delay2 = 5;
@@ -71,16 +70,14 @@ function runCode(){
     add(character);
     mouseMoveMethod(moveCharacter);
     //setTimer(moveCharacter, 5);
-    setTimer(dustCommand, 5);
     add(obst);
     add(obst2);
     add(obst3);
     add(obst4);
-    setTimer(moveObst,4);
     // terrain1();
     // terrain2();
     //setTimer(animateTerrain,25);
-    setTimer(makeText,1);
+    setTimer(animate,20);
 }
 function moveCharacter(e) {
     if (!lost){
@@ -107,6 +104,7 @@ function moveCharacter(e) {
             stopTimer(moveCharacter);
             stopTimer(dustCommand);
         }
+    }
 }
 function swap(e){
     smooth = true;
@@ -116,19 +114,34 @@ function swap2(e){
 }
 
 function moveObst(){
-    obst.move(ax,ay);
-    obst2.move(ax2,ay2);
-    obst3.move(ax3,ay3);
-    obst4.move(ax4,ay4);
-    if(obst.getX() + 30 == 0){
-        obst.setPosition(getWidth(), Randomizer.nextInt
-        (10, getHeight()/2));
-        println ("1");
+    // obst.move(ax,ay);
+    // obst2.move(ax2,ay2);
+    // obst3.move(ax3,ay3);
+    // obst4.move(ax4,ay4);
+    // if(obst.getX() + 30 == 0){
+    //     obst.setPosition(getWidth(), Randomizer.nextInt
+    //     (10, getHeight()/2));
+    //     println ("1");
+    // }
+    // if(obst2.getX() + 30 == 0){
+    //     obst2.setPosition(getWidth(), Randomizer.nextInt
+    //     (getHeight()/2, getHeight()-10));
+    //     println("2");
+    // }
+    if
+    var numOrbs = Randomizer.nextInt(1,2);
+    for (var i = 0; i < numOrbs; i++){
+        var orb = new Circle(Randomizer.nextInt(2,10))
+        orb.isOrb = true;
+        orbs.push(orb)
+        if (orbs[orbs.length-1])
+        orbs[orbs.length-1].setPosition(getWidth(), Randomizer.nextInt(0,getHeight()))
+        add(orbs[orbs.length-1])
     }
-    if(obst2.getX() + 30 == 0){
-        obst2.setPosition(getWidth(), Randomizer.nextInt
-        (getHeight()/2, getHeight()-10));
-        println("2");
+    
+    // move orbs back
+    for (var i = 0; i < orbs.length ; i++){
+        orbs[i].move(-5,0)
     }
     
     
@@ -166,12 +179,12 @@ function moveObst(){
         whiteBox.setColor(Color.white);
         whiteBox.tryAgain=true;
         add (whiteBox);
-        tryAgainTxt = new Text("TRY AGAIN?", "30pt Arial");
-        tryAgainTxt.setPosition(getWidth()/2-120, getHeight()/2+53);
-        tryAgainTxt.setColor(Color.red);
-        tryAgainTxt.tryAgain=true
-        add(tryAgainTxt);
-        mouseClickMethod(restart);
+        // tryAgainTxt = new Text("TRY AGAIN?", "30pt Arial");
+        // tryAgainTxt.setPosition(getWidth()/2-120, getHeight()/2+53);
+        // tryAgainTxt.setColor(Color.red);
+        // tryAgainTxt.tryAgain=true
+        // add(tryAgainTxt);
+        // mouseClickMethod(restart);
     }
     
     // if(obst3.getX() + 30 == 0){
@@ -188,6 +201,12 @@ function moveObst(){
         stopTimer(moveObst);
     }
     // obst2.setColor(Randomizer.nextColor());
+}
+
+function animate(){
+    dustCommand()
+    moveObst()
+    makeText()
 }
 function dustCommand(){
     if (clockCount % delay == 0) {
@@ -237,62 +256,62 @@ function song(){
     mySong.play();
     mySong.loop = true;
 }
-function restart(e){
-    var tryBox = getElementAt(e.getX(),e.getY());
-    if(tryBox.tryAgain){
-        remove(character);
-        remove(dust);
-        remove(obst);
-        remove(obst2);
-        remove(obst3);
-        remove(obst4)
-        remove(tryAgainTxt);
-        remove(whiteBox);
-        remove(scoreTxt);
-        points = 0;
-        lost = false;
-        checkOn = false;
-        MAX_DY = -4;
-        dx = 0;
-        dy = 2;
-        ax = -2;
-        ax2 = -2;
-        ax3 = -3;
-        ax4 = -3;
-        ay = 0;
-        ay2 = 0;
-        ay3 = 0;
-        ay4 = 3;
-        smooth = false;
-        numBlocks = 0;
-        numBlocksTwo = 0;
-        moveTerrain = [];
-        moveTerrain2 = [];
-        dust = [];
-        clockCount = 0;
-        delay = 2;
-        delay2 = 5;
-        obst;
-        obst2;
-        obst3;
-        obst4;
-        character = new WebImage("https://codehs.com/uploads/1e22a8ce9c9f5b2aee1b80700d726173");
-        character.setSize(60,60);
-        character.setPosition(100, 100);
-        character.setColor(Color.blue);
-        //character.setRotation(-10);
-        obst = new Circle(10);
-        obst.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
-        obst.setColor(Color.white);
-        obst2 = new Circle(10);
-        obst2.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
-        obst2.setColor(Color.white);
-        obst3 = new Circle(10);
-        obst3.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
-        obst3.setColor(Color.white);
-        obst4 = new Circle(10);
-        obst4.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
-        obst4.setColor(Color.white);
-        runCode();
-    }
-}
+// function restart(e){
+//     var tryBox = getElementAt(e.getX(),e.getY());
+//     if(tryBox.tryAgain){
+//         remove(character);
+//         remove(dust);
+//         remove(obst);
+//         remove(obst2);
+//         remove(obst3);
+//         remove(obst4)
+//         remove(tryAgainTxt);
+//         remove(whiteBox);
+//         remove(scoreTxt);
+//         points = 0;
+//         lost = false;
+//         checkOn = false;
+//         MAX_DY = -4;
+//         dx = 0;
+//         dy = 2;
+//         ax = -2;
+//         ax2 = -2;
+//         ax3 = -3;
+//         ax4 = -3;
+//         ay = 0;
+//         ay2 = 0;
+//         ay3 = 0;
+//         ay4 = 3;
+//         smooth = false;
+//         numBlocks = 0;
+//         numBlocksTwo = 0;
+//         moveTerrain = [];
+//         moveTerrain2 = [];
+//         dust = [];
+//         clockCount = 0;
+//         delay = 2;
+//         delay2 = 5;
+//         obst;
+//         obst2;
+//         obst3;
+//         obst4;
+//         character = new WebImage("https://codehs.com/uploads/1e22a8ce9c9f5b2aee1b80700d726173");
+//         character.setSize(60,60);
+//         character.setPosition(100, 100);
+//         character.setColor(Color.blue);
+//         //character.setRotation(-10);
+//         obst = new Circle(10);
+//         obst.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+//         obst.setColor(Color.white);
+//         obst2 = new Circle(10);
+//         obst2.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+//         obst2.setColor(Color.white);
+//         obst3 = new Circle(10);
+//         obst3.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+//         obst3.setColor(Color.white);
+//         obst4 = new Circle(10);
+//         obst4.setPosition(600, Randomizer.nextInt(0, getHeight() + 90));
+//         obst4.setColor(Color.white);
+//         runCode();
+//     }
+// }
