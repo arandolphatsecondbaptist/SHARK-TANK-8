@@ -33,7 +33,7 @@ var moveScreen;
 var background;
 var song;
 var character = new WebImage("https://codehs.com/uploads/1e22a8ce9c9f5b2aee1b80700d726173");
-character.setSize(60,60);
+character.setSize(20,20);
 character.setPosition(100, 100);
 character.setColor(Color.blue);
 //character.setRotation(-10);
@@ -128,46 +128,43 @@ function moveObst(){
     //     (getHeight()/2, getHeight()-10));
     //     println("2");
     // }
-    if
-    var numOrbs = Randomizer.nextInt(1,2);
-    for (var i = 0; i < numOrbs; i++){
-        var orb = new Circle(Randomizer.nextInt(2,10))
-        orb.isOrb = true;
-        orbs.push(orb)
-        if (orbs[orbs.length-1])
-        orbs[orbs.length-1].setPosition(getWidth(), Randomizer.nextInt(0,getHeight()))
-        add(orbs[orbs.length-1])
+    if (points%2==0){
+        var numOrbs = Randomizer.nextInt(1,2);
+        for (var i = 0; i < numOrbs; i++){
+            var orb = new Circle(Randomizer.nextInt(2,10))
+            orb.isOrb = true;
+            orbs.push(orb)
+            if (orbs[orbs.length-1])
+            orbs[orbs.length-1].setPosition(getWidth(), Randomizer.nextInt(0,getHeight()))
+            add(orbs[orbs.length-1])
+        }
+        // move orbs back
+        for (var i = 0; i < orbs.length ; i++){
+            orbs[i].move(-5,0)
+        }
     }
-    
-    // move orbs back
-    for (var i = 0; i < orbs.length ; i++){
-        orbs[i].move(-5,0)
+    // top front corner
+    var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getY()/2)
+    // wallTwo = getElementAt(character.getX()-1, character.getY()-1),
+    // wallThree = getElementAt(character.getX(), character.getY()+character.getHeight() + 1),
+    // wallFour = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight() + 1),
+    // wallFive = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight()/2);
+
+    if (wall) {
+        if(wall.isOrb) lost = true;
     }
-    
-    
-        // top front corner
-        var wall = getElementAt(character.getX()+character.getWidth()+1, character.getY()),
-        wallTwo = getElementAt(character.getX()-1, character.getY()-1),
-        wallThree = getElementAt(character.getX(), character.getY()+character.getHeight() + 1),
-        wallFour = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight() + 1),
-        wallFive = getElementAt(character.getX()+character.getWidth()+1, character.getY()+character.getHeight()/2);
-    
-        if (wall) {
-            if(wall.isOrb) lost = true;
-        }
-        if (wallTwo) {
-            if(wallTwo.isOrb) lost = true;
-        }
-        if (wallThree) {
-            if(wallThree.isOrb) lost = true;
-        }
-        if (wallFour) {
-            if(wallFour.isOrb) lost = true;
-        }
-        if (wallFive) {
-            if(wallFive.isOrb) lost = true;
-        }
-    
+    // if (wallTwo) {
+    //     if(wallTwo.isOrb) lost = true;
+    // }
+    // if (wallThree) {
+    //     if(wallThree.isOrb) lost = true;
+    // }
+    // if (wallFour) {
+    //     if(wallFour.isOrb) lost = true;
+    // }
+    // if (wallFive) {
+    //     if(wallFive.isOrb) lost = true;
+    // }
     if(lost){
         stopTimer(makeText);
         scoreTxt = new Text("YOUR SCORE WAS: "+ points, "30pt Arial");
